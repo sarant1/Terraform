@@ -1,3 +1,4 @@
+
 provider "azurerm" {
   features {}
 }
@@ -25,5 +26,17 @@ resource "azurerm_virtual_network" "high_availability_network" {
     environment = "Production"
   }
 }
+
+resource "azurerm_availability_set" "high_availability_set" {
+  name                = "high_availability_set"
+  location            = var.azure_region
+  resource_group_name = azurerm_resource_group.high_availabability_resource_group.name
+
+  tags = {
+    environment = "Production"
+  }
+}
+
+
 
 

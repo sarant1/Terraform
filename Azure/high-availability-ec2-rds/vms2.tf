@@ -1,24 +1,36 @@
-resource "azurerm_network_interface" "nic_1" {
-  name                = "nic-1"
+resource "azurerm_network_interface" "nic_2" {
+  name                = "nic-2"
   location            = var.azure_region
   resource_group_name = azurerm_resource_group.high_availabability_resource_group.name
 
   ip_configuration {
     name                          = "internal"
-    subnet_id                     = azurerm_subnet.high_availablity_subnet_1.id
+    subnet_id                     = azurerm_subnet.high_availablity_subnet_2.id
     private_ip_address_allocation = "Dynamic"
+    public_ip_address_id = azurerm_public_ip.public_ip_2.id
+  }
+}
+
+resource "azurerm_public_ip" "public_ip_2" {
+  name                = "HA-public-ip-2"
+  resource_group_name = azurerm_resource_group.high_availabability_resource_group.name
+  location            = var.azure_region
+  allocation_method   = "Static"
+
+  tags = {
+    environment = "Production"
   }
 }
 
 
-resource "azurerm_linux_virtual_machine" "vm_1" {
-  name                = "vm-1"
+resource "azurerm_linux_virtual_machine" "vm_2" {
+  name                = "vm-2"
   resource_group_name = azurerm_resource_group.high_availabability_resource_group.name
   location            = var.azure_region
   size                = "Standard_B1ms"
   admin_username      = "sudosam"
   network_interface_ids = [
-    azurerm_network_interface.nic_1.id
+    azurerm_network_interface.nic_2.id
   ]
 
   admin_ssh_key {
